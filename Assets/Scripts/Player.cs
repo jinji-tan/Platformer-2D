@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     public bool isWalking { get; private set; }
     public bool isJumping { get; private set; }
     public bool isGrounded;
+    public bool wallDetected;
     public int facingDir = 1;
     public bool facingRight = true;
 
@@ -40,6 +41,7 @@ public class Player : MonoBehaviour
     [Header("Collision Detection")]
     [SerializeField] LayerMask whatIsGround;
     [SerializeField] float groudCheckDistance = 1f;
+    [SerializeField] float wallCheckDistance = 1f;
 
 
 
@@ -66,9 +68,9 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+
         stateMachine.UpdateActiveScene();
         HandleCollisionDectection();
-
 
     }
 
@@ -123,12 +125,6 @@ public class Player : MonoBehaviour
 
     public void Flip()
     {
-        // bool hasHorizontalVelocity = Mathf.Abs(rb.linearVelocity.x) > Mathf.Epsilon;
-        // if (hasHorizontalVelocity)
-        // {
-        //     transform.localScale = new Vector2(Mathf.Sign(rb.linearVelocity.x), 1f);
-        //     facingDir *= -1;
-        // }
         facingRight = !facingRight;
         transform.Rotate(0, 180, 0);
         facingDir *= -1;
@@ -137,10 +133,12 @@ public class Player : MonoBehaviour
     void HandleCollisionDectection()
     {
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groudCheckDistance, whatIsGround);
+        wallDetected = Physics2D.Raycast(transform.position, Vector2.right, wallCheckDistance * facingDir, whatIsGround);
     }
 
     void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position, transform.position + new Vector3(0, -groudCheckDistance));
+        Gizmos.DrawLine(transform.position, transform.position + new Vector3(wallCheckDistance * facingDir, 0f));
     }
 }
