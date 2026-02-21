@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public Player_WalkState walkState { get; private set; }
     public Player_JumpState jumpState { get; private set; }
     public Player_FallState fallState { get; private set; }
+    public Player_DashState dashState { get; private set; }
 
 
     [Header("Input")]
@@ -20,18 +21,27 @@ public class Player : MonoBehaviour
     public Rigidbody2D rb { get; private set; }
     public Animator anim { get; private set; }
 
+
+    [Header("Player Info")]
+    public bool isWalking { get; private set; }
+    public bool isJumping { get; private set; }
+    public bool isGrounded;
+    public int facingDir = 1;
+    public bool facingRight = true;
+
     [Header("Movement Details")]
     public float moveSpeed = 10f;
     public float walkSpeed = 3f;
     public float jumpForce = 5f;
     public float inAirMultiplier = .7f;
-    public bool isWalking { get; private set; }
-    public bool isJumping { get; private set;}
+    public float dashDuration = .25f;
+    public float dashSpeed = 25f;
 
     [Header("Collision Detection")]
-    public bool isGrounded;
     [SerializeField] LayerMask whatIsGround;
     [SerializeField] float groudCheckDistance = 1f;
+
+
 
     void Awake()
     {
@@ -45,6 +55,7 @@ public class Player : MonoBehaviour
         walkState = new Player_WalkState(this, stateMachine, "walk");
         jumpState = new Player_JumpState(this, stateMachine, "jumpfall");
         fallState = new Player_FallState(this, stateMachine, "jumpfall");
+        dashState = new Player_DashState(this, stateMachine, "dash");
 
     }
 
@@ -57,6 +68,8 @@ public class Player : MonoBehaviour
     {
         stateMachine.UpdateActiveScene();
         HandleCollisionDectection();
+
+
     }
 
     private void OnEnable()
@@ -81,7 +94,7 @@ public class Player : MonoBehaviour
 
         input.Player.Walk.performed -= ctx => isWalking = true;
         input.Player.Walk.canceled -= ctx => isWalking = false;
-        
+
         input.Player.Jump.performed += ctx => isJumping = true;
         input.Player.Jump.canceled += ctx => isJumping = false;
 
@@ -93,16 +106,32 @@ public class Player : MonoBehaviour
     {
         rb.linearVelocity = new Vector2(xVelocity, yVelocity);
 
-        Flip();
+        HandleFlip(xVelocity);
+    }
+
+    public void HandleFlip(float xVelocity)
+    {
+        if (xVelocity > 0 && !facingRight)
+        {
+            Flip();
+        }
+        else if (xVelocity < 0 && facingRight)
+        {
+            Flip();
+        }
     }
 
     public void Flip()
     {
-        bool hasHorizontalVelocity = Mathf.Abs(rb.linearVelocity.x) > Mathf.Epsilon;
-        if (hasHorizontalVelocity)
-        {
-            transform.localScale = new Vector2(Mathf.Sign(rb.linearVelocity.x), 1f);
-        }
+        // bool hasHorizontalVelocity = Mathf.Abs(rb.linearVelocity.x) > Mathf.Epsilon;
+        // if (hasHorizontalVelocity)
+        // {
+        //     transform.localScale = new Vector2(Mathf.Sign(rb.linearVelocity.x), 1f);
+        //     facingDir *= -1;
+        // }
+        facingRight = !facingRight;
+        transform.Rotate(0, 180, 0);
+        facingDir *= -1;
     }
 
     void HandleCollisionDectection()

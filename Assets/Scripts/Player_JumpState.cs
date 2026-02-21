@@ -20,9 +20,4 @@ public class Player_JumpState : Player_InAirState
             stateMachine.ChangeState(player.fallState);
         }
     }
-
-    public override void Exit()
-    {
-  
-    }
 }
