@@ -38,7 +38,7 @@ public abstract class EntityState
             stateMachine.ChangeState(player.dashState);
         }
 
-        Debug.Log(stateMachine.currentState);
+        // Debug.Log(stateMachine.currentState);
     }
 
     public virtual void Exit()

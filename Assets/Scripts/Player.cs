@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +12,7 @@ public class Player : MonoBehaviour
     public Player_JumpState jumpState { get; private set; }
     public Player_FallState fallState { get; private set; }
     public Player_DashState dashState { get; private set; }
+    public Player_WallSlideState wallSlideState { get; private set; }
 
 
     [Header("Input")]
@@ -20,6 +22,8 @@ public class Player : MonoBehaviour
     [Header("References")]
     public Rigidbody2D rb { get; private set; }
     public Animator anim { get; private set; }
+
+    public SpriteRenderer sr { get; private set; }
 
 
     [Header("Player Info")]
@@ -37,6 +41,7 @@ public class Player : MonoBehaviour
     public float inAirMultiplier = .7f;
     public float dashDuration = .25f;
     public float dashSpeed = 25f;
+    public float wallSlideSpeed = 0.15f;
 
     [Header("Collision Detection")]
     [SerializeField] LayerMask whatIsGround;
@@ -51,6 +56,7 @@ public class Player : MonoBehaviour
         input = new PlayerInputSet();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
+        sr = GetComponentInChildren<SpriteRenderer>();
 
         idleState = new Player_IdleState(this, stateMachine, "idle");
         runState = new Player_RunState(this, stateMachine, "run");
@@ -58,6 +64,7 @@ public class Player : MonoBehaviour
         jumpState = new Player_JumpState(this, stateMachine, "jumpfall");
         fallState = new Player_FallState(this, stateMachine, "jumpfall");
         dashState = new Player_DashState(this, stateMachine, "dash");
+        wallSlideState = new Player_WallSlideState(this, stateMachine, "wallSlide");
 
     }
 
