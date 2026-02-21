@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     public Vector2 moveInput { get; private set; }
 
     [Header("References")]
-    public Rigidbody2D rb { get; private set; }
+    public Rigidbody2D rb;
     public Animator anim { get; private set; }
 
     public SpriteRenderer sr { get; private set; }

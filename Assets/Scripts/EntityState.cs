@@ -7,7 +7,7 @@ public abstract class EntityState
     protected string animBoolName { get; private set; }
 
     protected Animator anim { get; private set; }
-    protected Rigidbody2D rb;
+    public Rigidbody2D rb;
     protected PlayerInputSet input;
 
     public float timerState;
@@ -33,7 +33,7 @@ public abstract class EntityState
     {
         anim.SetFloat("yVelocity", rb.linearVelocity.y);
 
-        if (input.Player.Dash.WasPressedThisFrame())
+        if (input.Player.Dash.WasPressedThisFrame() && CanDash())
         {
             stateMachine.ChangeState(player.dashState);
         }
@@ -48,6 +48,8 @@ public abstract class EntityState
 
     public bool CanDash()
     {
+        if (player.wallDetected)
+            return false;
         return true;
     }
 }

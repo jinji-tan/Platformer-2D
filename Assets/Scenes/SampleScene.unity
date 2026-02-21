@@ -411,6 +411,7 @@ MonoBehaviour:
   inAirMultiplier: 0.7
   dashDuration: 0.25
   dashSpeed: 25
+  wallSlideSpeed: 0.15
   whatIsGround:
     serializedVersion: 2
     m_Bits: 128
