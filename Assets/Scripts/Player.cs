@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     public Player_FallState fallState { get; private set; }
     public Player_DashState dashState { get; private set; }
     public Player_WallSlideState wallSlideState { get; private set; }
+    public Player_WallJumpState wallJumpState { get; private set; }
 
 
     [Header("Input")]
@@ -42,6 +43,7 @@ public class Player : MonoBehaviour
     public float dashDuration = .25f;
     public float dashSpeed = 25f;
     public float wallSlideSpeed = 0.15f;
+    public Vector2 wallJumpDir;
 
     [Header("Collision Detection")]
     [SerializeField] LayerMask whatIsGround;
@@ -65,6 +67,9 @@ public class Player : MonoBehaviour
         fallState = new Player_FallState(this, stateMachine, "jumpfall");
         dashState = new Player_DashState(this, stateMachine, "dash");
         wallSlideState = new Player_WallSlideState(this, stateMachine, "wallSlide");
+        wallJumpState = new Player_WallJumpState(this, stateMachine, "jumpfall");
+
+        OnEnable();
 
     }
 
